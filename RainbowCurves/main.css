@@ -1,0 +1,14 @@
+/* Canvas container, expects parent to be flex */
+.art-canvas__container {
+  flex: 1 0 auto;
+
+  padding-left: inherit;
+  padding-right: inherit;
+
+  width: 100vw;
+}
+
+/* Canvas element */
+.art-canvas {
+  position: absolute;
+}
