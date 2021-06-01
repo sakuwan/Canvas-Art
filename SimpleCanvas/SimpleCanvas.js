@@ -94,4 +94,59 @@ export class SimpleCanvas {
 
     return this;
   }
+
+  axis(gridWidth, gridHeight) {
+  	const { context } = this;
+  	const { width, height } = this.canvas;
+
+    const lineCountX = Math.floor(height / gridHeight);
+    const lineCountY = Math.floor(width / gridWidth);
+
+    const centerAxisX = (lineCountX / 2);
+    const centerAxisY = (lineCountY / 2);
+
+    const offsetX = ((height / gridHeight) / 2) % 1;
+    const offsetY = ((width / gridWidth) / 2) % 1;
+
+		context.save();
+    context.lineWidth = 1;
+
+    context.strokeStyle = '#E9E9E9'
+		context.beginPath();
+
+    for (let i = 0; i <= lineCountX; i += 1) {
+    	if (i !== centerAxisX) {
+    		const overflowX = i + offsetX;
+
+        context.moveTo(0, gridHeight * overflowX + 0.5);
+        context.lineTo(width, gridHeight * overflowX + 0.5);
+      }
+    }
+
+    for (let i = 0; i <= lineCountY; i += 1) {
+    	if (i !== centerAxisY) {
+    		const overflowY = i + offsetY;
+
+        context.moveTo(gridWidth * overflowY + 0.5, 0);
+        context.lineTo(gridWidth * overflowY + 0.5, height);
+      }
+    }
+
+    context.stroke();
+
+    context.strokeStyle = '#000000';
+    context.beginPath();
+
+		context.moveTo(0, gridHeight * centerAxisX + 0.5);
+		context.lineTo(width, gridHeight * centerAxisX + 0.5);
+
+		context.moveTo(gridWidth * centerAxisY + 0.5, 0);
+		context.lineTo(gridWidth * centerAxisY + 0.5, height);
+
+    context.stroke();
+
+    context.restore();
+
+    return this;
+  }
 }
