@@ -102,8 +102,8 @@ export class SimpleCanvas {
     const lineCountX = Math.floor(height / gridHeight);
     const lineCountY = Math.floor(width / gridWidth);
 
-    const centerAxisX = (lineCountX / 2);
-    const centerAxisY = (lineCountY / 2);
+    const centerAxisX = Math.floor((lineCountX / 2));
+    const centerAxisY = Math.floor((lineCountY / 2));
 
     const offsetX = ((height / gridHeight) / 2) % 1;
     const offsetY = ((width / gridWidth) / 2) % 1;
@@ -137,11 +137,11 @@ export class SimpleCanvas {
     context.strokeStyle = '#000000';
     context.beginPath();
 
-		context.moveTo(0, gridHeight * centerAxisX + 0.5);
-		context.lineTo(width, gridHeight * centerAxisX + 0.5);
+		context.moveTo(0, gridHeight * (centerAxisX + offsetX) + 0.5);
+		context.lineTo(width, gridHeight * (centerAxisX + offsetX) + 0.5);
 
-		context.moveTo(gridWidth * centerAxisY + 0.5, 0);
-		context.lineTo(gridWidth * centerAxisY + 0.5, height);
+		context.moveTo(gridWidth * (centerAxisY + offsetY) + 0.5, 0);
+		context.lineTo(gridWidth * (centerAxisY + offsetY) + 0.5, height);
 
     context.stroke();
 
