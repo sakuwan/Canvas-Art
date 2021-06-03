@@ -1,29 +1,27 @@
-/* === Sphere === 
+/** === Sphere === 
  *
- * Generate a sphere with the provided radius and segment counts
+ * * Generate a sphere with the provided radius and segment counts
  *
- * Parameters:
- *
- * radius - Radius of the generated sphere
- * azimuthalSegments - Longitudinal segment count for the generated sphere
- * polarSegments - Colatitudinal segment count for the generated sphere
+ * @param radius            Radius of the sphere
+ * @param azimuthalSegments Number of longitudinal segments
+ * @param polarSegments     Number of colatitudinal segments
 */
 
 const sphereGeometry = (radius, azimuthalSegments, polarSegments) => {
-	const azimuthalSteps = (Math.PI * 2) / azimuthalSegments;
-  const polarSteps = Math.PI / polarSegments;
+  const polarStep = Math.PI / polarSegments;
+	const azimuthalStep = (Math.PI * 2) / azimuthalSegments;
 
 	const vertices = [];
 
   // Polar segments
   for (let i = 0; i <= polarSegments; i++) {
-  	const theta = i * polarSteps;
+  	const theta = i * polarStep;
     const cosTheta = Math.cos(theta);
     const sinTheta = Math.sin(theta);
 
 		// Azimuthal segments
     for (let j = 0; j < azimuthalSegments; j++) {
-    	const phi = j * azimuthalSteps;
+    	const phi = j * azimuthalStep;
       const cosPhi = Math.cos(phi);
       const sinPhi = Math.sin(phi);
 
