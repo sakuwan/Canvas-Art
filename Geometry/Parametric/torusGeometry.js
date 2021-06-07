@@ -8,7 +8,7 @@
  * @param segments Number of segments per ring
 */
 
-const torusGeometry = (major, minor, rings, segments) => {
+export const torusGeometry = (major, minor, rings, segments) => {
   const ringStep = (Math.PI * 2) / rings;
   const segmentStep = (Math.PI * 2) / segments;
 

@@ -7,7 +7,7 @@
  * @param polarSegments     Number of colatitudinal segments
 */
 
-const sphereGeometry = (radius, azimuthalSegments, polarSegments) => {
+export const sphereGeometry = (radius, azimuthalSegments, polarSegments) => {
   const polarStep = Math.PI / polarSegments;
 	const azimuthalStep = (Math.PI * 2) / azimuthalSegments;
 

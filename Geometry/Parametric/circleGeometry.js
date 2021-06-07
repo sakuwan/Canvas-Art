@@ -8,7 +8,7 @@
  * @param circles  Number of circles to in the series
 */
 
-const circleGeometry = (major, minor, segments, circles) => {
+export const circleGeometry = (major, minor, segments, circles) => {
   const circleStep = (major - minor) / circles;
   const segmentStep = (Math.PI * 2) / segments;
 
