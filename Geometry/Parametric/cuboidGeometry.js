@@ -47,13 +47,11 @@ export const cuboidGeometry = (width, height, depth, segments) => {
       for (let j = 0; j < segments + 1; j += 1) {
         const xStep = j * xSegment - w;
 
-        let vertex = {};
-
-        vertex[x] = xStep * xDir;
-        vertex[y] = yStep * yDir;
-        vertex[z] = d;
-
-        vertices.push(vertex);
+        vertices.push({
+          [x]: xStep * xDir,
+          [y]: yStep * yDir,
+          [z]: d,
+        });
       }
     }
 
