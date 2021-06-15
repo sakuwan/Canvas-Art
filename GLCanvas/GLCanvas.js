@@ -1,6 +1,6 @@
 const noop = () => {};
 
-export class SimpleCanvas {
+export class GLCanvas {
   constructor(queryString = '', contextType = 'webgl') {
     const canvasElement = document.querySelector(
       queryString.length ? queryString : 'canvas'
@@ -10,6 +10,13 @@ export class SimpleCanvas {
 
     this.canvas = canvasElement;
     this.context = canvasElement.getContext(contextType);
+    if (contextType === 'webgl' && !this.context) {
+      this.context = canvasElement.getContext('experimental-webgl');
+    }
+
+    this.gl = null;
+    this.vertex = null;
+    this.fragment = null;
 
     this.lastDelta = 0;
     this.elapsedTime = 0;
@@ -21,12 +28,57 @@ export class SimpleCanvas {
     this.onPrerender = noop;
     this.onRender = noop;
     this.onPostrender = noop;
+  }
+
+  initialize(vertexContent, fragmentContent, clearColor = [0, 0, 0, 1]) {
+    const { context } = this;
+
+    const vertexShader = context.createShader(context.VERTEX_SHADER);
+    const fragmentShader = context.createShader(context.FRAGMENT_SHADER);
+
+    context.shaderSource(vertexShader, vertexContent);
+    context.shaderSource(fragmentShader, fragmentContent);
+
+    context.compileShader(vertexShader);
+    context.compileShader(fragmentShader);
+
+    const vertexSuccess = !!context.getShaderParameter(vertexShader, context.COMPILE_STATUS);
+    if (!vertexSuccess) {
+      const shaderError = context.getShaderInfoLog(vertexShader);
+      throw new Error(`Failed to compile vertex shader: ${shaderError}`);
+    }
+
+    const fragmentSuccess = !!context.getShaderParameter(fragmentShader, context.COMPILE_STATUS);
+    if (!fragmentSuccess) {
+      const shaderError = context.getShaderInfoLog(fragmentShader);
+      throw new Error(`Failed to compile fragment shader: ${shaderError}`);
+    }
+
+    const glProgram = context.createProgram();
+
+    context.attachShader(glProgram, vertexShader);
+    context.attachShader(glProgram, fragmentShader);
+    context.linkProgram(glProgram);
+
+    const programSuccess = !!context.getProgramParameter(glProgram, context.LINK_STATUS);
+    if (!programSuccess) {
+      const programError = context.getProgramInfoLog(glProgram);
+      throw new Error(`Failed to link program: ${programError}`);
+    }
+
+    context.useProgram(glProgram);
+
+    context.clearColor(...clearColor);
+
+    this.gl = glProgram;
+    this.vertex = vertexShader;
+    this.fragment = fragmentShader;
 
     this.resize();
   }
 
-  resize(w = null, h = null) {
-    const { canvas, context } = this;
+  resize(w = null, h = null, clear = true) {
+    const { canvas } = this;
 
     if (w === null || h === null) {
       const { width, height } = canvas.parentElement.getBoundingClientRect();
@@ -38,7 +90,7 @@ export class SimpleCanvas {
       canvas.height = h;
     }
 
-    context.clearRect(0, 0, canvas.width, canvas.height);
+    if (clear) this.clear();
   }
 
   loop(delta) {
