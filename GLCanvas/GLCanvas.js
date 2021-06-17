@@ -61,9 +61,9 @@ export class GLCanvas {
     let vertexContent = glOptions.is2D ? `
       #version 300 es
       precision highp float;
-    
+
       layout (location = 0) in vec2 aPos;
-    
+
       void main(void) {
         gl_Position = vec4(aPos.xy, 0, 1);
       }`.trim() : glOptions.vertexContent;
@@ -71,12 +71,16 @@ export class GLCanvas {
     let fragmentContent = glOptions.is2D ? `
       #version 300 es
       precision highp float;
-    
+
       uniform float uTime;
       uniform vec2 uResolution;
-    
+
       out vec4 outColor;
-      
+
+      vec2 screenUV(in vec2 frag, in vec2 res) {
+        return (-res.xy + 2.0 * frag) / res.y;
+      }
+
       ${glOptions.fragmentContent}
       
       void main(void) {
