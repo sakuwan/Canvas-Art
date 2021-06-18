@@ -77,6 +77,35 @@ export class GLCanvas {
 
       out vec4 outColor;
 
+      float float01(uint base) {
+        return uintBitsToFloat((base >> 9) | 0x3F800000u) - 1.0;
+      }
+
+      // LCG values from Numerical Recipes
+      uint LCG(uint seed) {
+          seed = 1664525u * seed + 1013904223u;
+          return seed;
+      }
+
+      // Xorshift algorithm from George Marsaglia's paper
+      uint xorShift(uint seed) {
+          seed ^= (seed << 13);
+          seed ^= (seed >> 17);
+          seed ^= (seed << 5);
+          return seed;
+      }
+
+      // Hash by Thomas Wang
+      // http://www.burtleburtle.net/bob/hash/integer.html
+      uint hash(uint seed) {
+          seed = (seed ^ 61u) ^ (seed >> 16);
+          seed *= 9u;
+          seed = seed ^ (seed >> 4);
+          seed *= 0x27D4EB2Du;
+          seed = seed ^ (seed >> 15);
+          return seed;
+      }
+
       vec2 screenUV(in vec2 frag, in vec2 res) {
         return (-res.xy + 2.0 * frag) / res.y;
       }
