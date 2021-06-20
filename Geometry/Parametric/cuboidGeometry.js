@@ -32,7 +32,9 @@ const getFaceDimensions = (axis, width, height, depth, index) => {
 }
 
 export const cuboidGeometry = (width, height, depth, segments) => {
-  const makeFace = (vertices, [axis, direction], index) => {
+  const makeFace = (geometry, [axis, direction], index) => {
+    const { vertices, indices } = geometry;
+
     const [x, y, z] = axis;
     const [xDir, yDir] = direction;
 
@@ -40,6 +42,8 @@ export const cuboidGeometry = (width, height, depth, segments) => {
 
     const xSegment = (w * 2) / segments;
     const ySegment = (h * 2) / segments;
+
+    const vertexOffset = vertices.length;
 
     for (let i = 0; i < segments + 1; i += 1) {
       const yStep = i * ySegment - h;
@@ -55,8 +59,22 @@ export const cuboidGeometry = (width, height, depth, segments) => {
       }
     }
 
-    return vertices;
+    for (let i = 0; i < segments; i += 1) {
+      const offsetY1 = vertexOffset + (segments + 1) * i;
+      const offsetY2 = vertexOffset + (segments + 1) * (i + 1);
+
+      for (let j = 0; j < segments; j += 1) {
+        const a = offsetY1 + j;
+        const b = offsetY2 + j;
+        const c = offsetY2 + (j + 1);
+        const d = offsetY1 + (j + 1);
+
+        indices.push(a, b, d, b, c, d);
+      }
+    }
+
+    return geometry;
   };
 
-  return CUBOID_FACES.reduce(makeFace, []);
+  return CUBOID_FACES.reduce(makeFace, { vertices: [], indices: [] });
 };
