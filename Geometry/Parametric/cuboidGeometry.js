@@ -25,13 +25,15 @@ const getFaceDimensions = (axis, width, height, depth, index) => {
       return [width / 2, depth / 2, (index % 2 > 0) ? -height / 2 : height / 2];
     case 'xyz':
       return [width / 2, height / 2, (index % 2 > 0) ? -depth / 2 : depth / 2];
-    
+
     default:
       throw new TypeError(`Invalid axis: ${axis}`);
   }
-}
+};
 
 export const cuboidGeometry = (width, height, depth, segments) => {
+  const vertexSegments = segments + 1;
+
   const makeFace = (geometry, [axis, direction], index) => {
     const { vertices, indices } = geometry;
 
@@ -43,38 +45,58 @@ export const cuboidGeometry = (width, height, depth, segments) => {
     const xSegment = (w * 2) / segments;
     const ySegment = (h * 2) / segments;
 
-    const vertexOffset = vertices.length;
+    const vertexGroup = (vertexSegments ** 2) * index * 3;
 
-    for (let i = 0; i < segments + 1; i += 1) {
+    for (let i = 0; i < vertexSegments; i += 1) {
       const yStep = i * ySegment - h;
 
-      for (let j = 0; j < segments + 1; j += 1) {
+      for (let j = 0; j < vertexSegments; j += 1) {
         const xStep = j * xSegment - w;
 
-        vertices.push({
+        const currentStride = (i * vertexSegments + j) * 3;
+        const currentOffset = vertexGroup + currentStride;
+
+        const orderedVertex = {
           [x]: xStep * xDir,
           [y]: yStep * yDir,
           [z]: d,
-        });
+        };
+
+        vertices[currentOffset + 0] = orderedVertex.x;
+        vertices[currentOffset + 1] = orderedVertex.y;
+        vertices[currentOffset + 2] = orderedVertex.z;
       }
     }
 
+    const indexGroup = (segments ** 2) * index * 6;
+    const vertexOffset = (vertexSegments ** 2) * index;
+
     for (let i = 0; i < segments; i += 1) {
-      const offsetY1 = vertexOffset + (segments + 1) * i;
-      const offsetY2 = vertexOffset + (segments + 1) * (i + 1);
+      const offsetY1 = vertexOffset + vertexSegments * i;
+      const offsetY2 = vertexOffset + vertexSegments * (i + 1);
 
       for (let j = 0; j < segments; j += 1) {
-        const a = offsetY1 + j;
-        const b = offsetY2 + j;
-        const c = offsetY2 + (j + 1);
-        const d = offsetY1 + (j + 1);
+        const currentStride = (i * segments + j) * 6;
+        const currentOffset = indexGroup + currentStride;
 
-        indices.push(a, b, d, b, c, d);
+        indices[currentOffset + 0] = offsetY1 + j;
+        indices[currentOffset + 1] = offsetY2 + j;
+        indices[currentOffset + 2] = offsetY1 + (j + 1);
+
+        indices[currentOffset + 3] = offsetY2 + j;
+        indices[currentOffset + 4] = offsetY2 + (j + 1);
+        indices[currentOffset + 5] = offsetY1 + (j + 1);
       }
     }
 
     return geometry;
   };
 
-  return CUBOID_FACES.reduce(makeFace, { vertices: [], indices: [] });
+  const indexCount = (segments ** 2) * 6 * 6;
+  const vertexCount = (vertexSegments ** 2) * 6 * 3;
+
+  return CUBOID_FACES.reduce(makeFace, {
+    indices: new Uint16Array(indexCount),
+    vertices: new Float64Array(vertexCount),
+  });
 };
