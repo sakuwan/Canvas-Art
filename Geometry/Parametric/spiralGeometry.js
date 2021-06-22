@@ -12,7 +12,7 @@ export const spiralGeometry = (radius, segments, curve) => {
 
   const segmentStep = Math.PI / segments;
 
-  for (let i = 0; i <= segments; i++) {
+  for (let i = 0; i <= segments; i += 1) {
     const vertexOffset = i * 3;
 
   	const theta = i * segmentStep;
