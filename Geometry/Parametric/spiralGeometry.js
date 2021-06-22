@@ -8,21 +8,21 @@
 */
 
 export const spiralGeometry = (radius, segments, curve) => {
+  const vertices = new Float32Array((segments + 1) * 3);
+
   const segmentStep = Math.PI / segments;
 
-  const vertices = [];
-
   for (let i = 0; i <= segments; i++) {
+    const vertexOffset = i * 3;
+
   	const theta = i * segmentStep;
     const cosTheta = Math.cos(theta);
     const sinTheta = Math.sin(theta);
 
-    const x = radius * sinTheta * Math.cos(curve * theta);
-    const y = radius * sinTheta * Math.sin(curve * theta);
-    const z = radius * cosTheta;
-
-    vertices.push({x, y, z});
+    vertices[vertexOffset + 0] = radius * sinTheta * Math.cos(curve * theta);
+    vertices[vertexOffset + 1] = radius * sinTheta * Math.sin(curve * theta);
+    vertices[vertexOffset + 2] = radius * cosTheta;
   }
 
-  return vertices;
+  return { vertices, indices: null };
 }
