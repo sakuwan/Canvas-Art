@@ -8,29 +8,30 @@
 */
 
 export const sphereGeometry = (radius, azimuthalSegments, polarSegments) => {
+  const indices = new Uint16Array();
+  const vertices = new Float32Array((azimuthalSegments + 1) * (polarSegments + 1) * 3);
+
   const polarStep = Math.PI / polarSegments;
 	const azimuthalStep = (Math.PI * 2) / azimuthalSegments;
 
-	const vertices = [];
-
   // Polar segments
-  for (let i = 0; i <= polarSegments; i++) {
+  for (let i = 0; i <= polarSegments; i += 1) {
   	const theta = i * polarStep;
     const cosTheta = Math.cos(theta);
     const sinTheta = Math.sin(theta);
 
 		// Azimuthal segments
-    for (let j = 0; j < azimuthalSegments; j++) {
+    for (let j = 0; j <= azimuthalSegments; j += 1) {
+      const vertexOffset = (i * polarSegments + j) * 3;
+
     	const phi = j * azimuthalStep;
       const cosPhi = Math.cos(phi);
       const sinPhi = Math.sin(phi);
 
       // Parametric equation of a sphere
-      const x = radius * sinTheta * cosPhi;
-      const y = radius * sinTheta * sinPhi;
-      const z = radius * cosTheta;
-
-      vertices.push({x, y, z});
+      vertices[vertexOffset + 0] = radius * sinTheta * cosPhi;
+      vertices[vertexOffset + 1] = radius * sinTheta * sinPhi;
+      vertices[vertexOffset + 2] = radius * cosTheta;
     }
   }
 
