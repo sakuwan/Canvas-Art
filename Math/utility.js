@@ -35,4 +35,4 @@ export const rand = (min, max) => {
 };
 
 export const degrees = (r) => r * (180 / Math.PI);
-export const radains = (d) => d * (Math.PI / 180);
+export const radians = (d) => d * (Math.PI / 180);
