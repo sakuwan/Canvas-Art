@@ -36,3 +36,6 @@ export const rand = (min, max) => {
 
 export const degrees = (r) => r * (180 / Math.PI);
 export const radians = (d) => d * (Math.PI / 180);
+
+export const angle = (a, b) => Math.atan2(a, b);
+export const distance = (a, b) => (a ** 2 + b ** 2) ** 0.5;
