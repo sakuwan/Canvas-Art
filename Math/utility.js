@@ -15,13 +15,20 @@ export const scale = (value, fromMin, fromMax, toMin, toMax, isClamped = false) 
     : scaledValue;
 };
 
-export const lerp = (a, b, alpha) => a * (1 - alpha) + b * alpha;
+export const lerp = (a, b, alpha) => (1 - alpha) * a + b * alpha;
+export const invlerp = (a, b, alpha) => a !== b ? (alpha - a) / (b - a) : 0;
 
 export const step = (edge, value) => value < edge ? 0 : 1;
 export const smoothStep = (min, max, value) => {
   const x = Math.max(0, Math.min(1, (value - min) / (max - min)));
 
   return x * x * (3 - 2 * x);
+}
+
+export const smootherStep = (min, max, value) => {
+  const x = Math.max(0, Math.min(1, (value - min) / (max - min)));
+
+	return x * x * x * (x * (x * 6 - 15) + 10);
 }
 
 export const mod = (value, n) => (value % n + n) % n;
