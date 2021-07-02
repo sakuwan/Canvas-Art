@@ -71,6 +71,7 @@ export class SimpleCanvas {
 
   getCanvas() { return this.canvas; }
   getContext() { return this.context; }
+  getDimensions() { return [ this.canvas.width, this.canvas.height ]; }
 
   setPrerender(fn) { this.onPrerender = fn; }
   setRender(fn) { this.onRender = fn; }
@@ -84,10 +85,10 @@ export class SimpleCanvas {
     return this;
   }
 
-  fps(delta) {
+  fps(delta, color = 'black') {
     this.context.save();
 
-    this.context.fillStyle = 'black';
+    this.context.fillStyle = color;
     this.context.fillText(`FPS: ${1000 / delta}`, 16, 16);
 
     this.context.restore();
