@@ -31,6 +31,18 @@ class PixelView {
     return this;
   }
 
+  getCanvas() { return this.canvas; }
+  getContext() { return this.context; }
+
+  getImage() { return this.imageData; }
+  getPixels() { return this.pixelData; }
+
+  draw(context) {
+    context.putImageData(this.imageData, 0, 0);
+
+    return this;
+  }
+
   clear() {
     this.uint32Data.fill(0);
 
