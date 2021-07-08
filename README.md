@@ -11,7 +11,7 @@ at custom intervals.
 * Simple, but pretty, though the overlapping color eventually leads to some artifacting, and there is no immediate
 solution as the concept itself is destructive; it's nothing more than a transparent canvas being painted on without clearing
 
-### Noise
+### TVStatic
 * Similar to simple TV static, just a simple low-fps noise generator for some visual effects.
 
 ## Author
