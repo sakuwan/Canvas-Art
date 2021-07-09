@@ -1,14 +1,13 @@
-
 /**
  * @function mulberry32
  * @description Create a mulberry32 PRNG instance
  *
- * @param {uint32} startSeed - Initial seed
+ * @param {uint32} [startSeed=0] - Initial seed
  * @returns {float} - A single [0..1] normalized float
  *
  * @see https://gist.github.com/tommyettinger/46a874533244883189143505d203312c
  */
-const mulberry32 = (startSeed) => {
+export const mulberry32 = (startSeed = 0) => {
   const mulberryConstant = 0x6D2B79F5 | 0;
 
   let seed = startSeed | 0;
