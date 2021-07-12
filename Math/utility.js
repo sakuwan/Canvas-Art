@@ -1,3 +1,7 @@
+export const TAU = Math.PI * 2;
+export const HALF_PI = Math.PI * 0.5;
+export const PHI = (1 + Math.sqrt(5)) * 0.5;
+
 export const round = (value, precision = 0) => {
     const precisionScale = Math.pow(10, precision);
     return Math.round(value * precisionScale) / precisionScale;
